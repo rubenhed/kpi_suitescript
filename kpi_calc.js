@@ -3,15 +3,16 @@
  * @NScriptType Portlet
  */
 
-MONTHS_TO_DISPLAY = 6;
+
 
 define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
-  let html = "";
-  
+  const MONTHS_TO_DISPLAY = 6;
+  const AVERAGE_PERIOD = 2;
+
   const getCapital = (savedSearchId) => { //正味運転資本額
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
-    const range = resultSet.getRange({ start: 0, end: 200 }); //65 items as of 20250220
+    const range = resultSet.getRange({ start: 0, end: 1000 }); //65 items as of 20250220
 
     const finalResults = {};
     const orderedDates = [];
@@ -33,7 +34,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
 
   const getAverage = (orderedDates, finalResults) => {
     //const capitalCurrency = capitalResults.map(capitalResults => capitalResults.formulaCurrencyTotal);
-    const AVERAGE_PERIOD = 2;
+    
     //const averageResults = {};
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
       const keys = orderedDates.slice(i, i + AVERAGE_PERIOD);
@@ -50,9 +51,8 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
   const getInventory = (savedSearchId, finalResults) => { //棚卸資産
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
-    const range = resultSet.getRange({ start: 0, end: 200 }); //7 items as of 20250220
+    const range = resultSet.getRange({ start: 0, end: 1000 }); //7 items as of 20250220
 
-    const results = [];
     let inventoryCurrencyTotal = 0;
 
     range.reverse().forEach((result) => {
@@ -75,7 +75,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
   const getDepreciation = (savedSearchId, finalResults) => { //減価償却費
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
-    const range = resultSet.getRange({ start: 0, end: 200 }); //7 items as of 20250220
+    const range = resultSet.getRange({ start: 0, end: 1000 }); //7 items as of 20250220
 
     range.forEach((result) => {
       const tranDate = result.getValue({ name: 'trandate', summary: search.Summary.GROUP }) || 'No Date found';
@@ -94,7 +94,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
   const getCostOfGoods = (savedSearchId, finalResults) => { //売上原価and営業利益 id is 10 and 26
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
-    const range = resultSet.getRange({ start: 0, end: 200 }); //15 items as of 20250220
+    const range = resultSet.getRange({ start: 0, end: 1000 }); //15 items as of 20250220
 
     range.forEach((result) => {
       const tranDate = result.getValue({ name: 'formulatext' }) || 'No Date found';
@@ -112,7 +112,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
   const getOperatingIncome = (savedSearchId, finalResults) => { //売上原価and営業利益 id is 10 and 26
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
-    const range = resultSet.getRange({ start: 0, end: 200 }); //15 items as of 20250220
+    const range = resultSet.getRange({ start: 0, end: 1000 }); //15 items as of 20250220
 
     range.forEach((result) => {
       const tranDate = result.getValue({ name: 'formulatext' }) || 'No Date found';
@@ -143,6 +143,8 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
 
   const render = (params) => {
     const portlet = params.portlet;
+    portlet.title = 'KPI numbers';
+    let html = "";
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705
     const capitalSavedSearchId = '8705';
@@ -163,8 +165,6 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718
     const goodsCostSavedSearchId = '8718';
     getCostOfGoods(goodsCostSavedSearchId, finalResults);
-    //portlet.html = test.join(', ');
-    //return;
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719
     const operatingIncomeSavedSearchId = '8719';
@@ -191,6 +191,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
       </style>`;
 
     html += `<table>`;
+
     html += `<tr>
       <th>日付</th>
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705" target="_blank">正味運転資本額</a></th>
@@ -228,7 +229,6 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
 
     html += '</table>';
 
-    portlet.title = 'KPI numbers';
     portlet.html = html;
   };
 
