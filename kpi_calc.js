@@ -3,7 +3,7 @@
  * @NScriptType Portlet
  */
 
-MONTHS_TO_DISPLAY = 2;
+MONTHS_TO_DISPLAY = 6;
 
 define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
   let html = "";
@@ -13,71 +13,82 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
     const resultSet = mySearch.run();
     const range = resultSet.getRange({ start: 0, end: 200 }); //65 items as of 20250220
 
-    const results = [];
-    let formulaCurrencyTotal = 0;
+    const finalResults = {};
+    const orderedDates = [];
+    let capitalTotal = 0;
 
     range.reverse().forEach((result) => {
       const tranDate = result.getValue({ name: 'trandate', summary: search.Summary.GROUP }) || 'No Date found';
 
       const formulaCurrencyMonth = result.getValue({ name: 'formulacurrency', summary: search.Summary.SUM }) || 0;
 
-      formulaCurrencyTotal += parseFloat(formulaCurrencyMonth) || 0;
-
-      results.push({ tranDate, formulaCurrencyTotal });
+      capitalTotal += parseFloat(formulaCurrencyMonth) || 0;
+      
+      finalResults[tranDate] = { capitalTotal };
+      orderedDates.push(tranDate);
     });
     
-    return results.reverse();
+    return [orderedDates.reverse(), finalResults]; //to here
   };
 
-  const getAverage = (capitalResults) => {
-    const capitalCurrency = capitalResults.map(capitalResults => capitalResults.formulaCurrencyTotal);
+  const getAverage = (orderedDates, finalResults) => {
+    //const capitalCurrency = capitalResults.map(capitalResults => capitalResults.formulaCurrencyTotal);
     const AVERAGE_PERIOD = 2;
-    const averageResults = [];
+    //const averageResults = {};
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
-      const average = capitalCurrency.slice(i, i + AVERAGE_PERIOD).reduce((acc, value) => acc + value, 0) / AVERAGE_PERIOD;
-      averageResults.push(average);
+      const keys = orderedDates.slice(i, i + AVERAGE_PERIOD);
+      const values = keys.map(key => finalResults[key]?.capitalTotal || 0);
+      const sum = values.reduce((acc, value) => acc + value, 0);
+      const capitalAverage = sum / AVERAGE_PERIOD; 
+      //const average = capitalCurrency.slice(i, i + AVERAGE_PERIOD).reduce((acc, value) => acc + value, 0) / AVERAGE_PERIOD;
+      finalResults[orderedDates[i]].capitalAverage = capitalAverage;
     }
 
-    return averageResults;
+    return finalResults;
   };
 
-  const getInventory = (savedSearchId) => { //棚卸資産
+  const getInventory = (savedSearchId, finalResults) => { //棚卸資産
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
     const range = resultSet.getRange({ start: 0, end: 200 }); //7 items as of 20250220
 
     const results = [];
-    let formulaCurrencyTotal = 0;
+    let inventoryCurrencyTotal = 0;
 
     range.reverse().forEach((result) => {
       const tranDate = result.getValue({ name: 'trandate', summary: search.Summary.GROUP }) || 'No Date found';
 
       const formulaCurrencyMonth = result.getValue({ name: 'formulacurrency', summary: search.Summary.SUM }) || 0;
 
-      formulaCurrencyTotal += parseFloat(formulaCurrencyMonth) || 0;
+      inventoryCurrencyTotal += parseFloat(formulaCurrencyMonth) || 0;
+      if (finalResults[tranDate]){
+        finalResults[tranDate].inventory = inventoryCurrencyTotal;
+      }
+      
 
-      results.push({ tranDate, formulaCurrencyTotal });
+      //results.push({ tranDate, formulaCurrencyTotal });
     });
     
-    return results.reverse();
+    return finalResults;
   };
 
-  const getDepreciation = (savedSearchId) => { //減価償却費
+  const getDepreciation = (savedSearchId, finalResults) => { //減価償却費
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
     const range = resultSet.getRange({ start: 0, end: 200 }); //7 items as of 20250220
-
-    const results = [];
 
     range.forEach((result) => {
       const tranDate = result.getValue({ name: 'trandate', summary: search.Summary.GROUP }) || 'No Date found';
 
-      const formulaCurrencyMonth = result.getValue({ name: 'formulacurrency', summary: search.Summary.SUM }) || 0;
+      const depreciationCurrencyMonth = result.getValue({ name: 'formulacurrency', summary: search.Summary.SUM }) || 0;
 
-      results.push({ tranDate, formulaCurrencyMonth : parseFloat(formulaCurrencyMonth) });
+      //results.push({ tranDate, depreciationCurrencyMonth : parseFloat(depreciationCurrencyMonth) });
+      if (finalResults[tranDate]){
+        finalResults[tranDate].depreciation = parseFloat(depreciationCurrencyMonth);
+      }
     });
 
-    return results;
+    return finalResults;
   };
 
   const getCostOfGoods = (savedSearchId, dates) => { //売上原価and営業利益 id is 10 and 26
@@ -117,27 +128,27 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705
     const capitalSavedSearchId = '8705';
-    const capitalResults = getCapital(capitalSavedSearchId);
+    const [orderedDates, finalResults] = getCapital(capitalSavedSearchId);
 
-    const averageResults = getAverage(capitalResults);
+    getAverage(orderedDates, finalResults);
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8707
     const inventorySavedSearchId = '8707';
-    const inventoryResults = getInventory(inventorySavedSearchId);
+    getInventory(inventorySavedSearchId, finalResults);
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708
     const depreciationSavedSearchId = '8708';
-    const depreciationResults = getDepreciation(depreciationSavedSearchId);
+    getDepreciation(depreciationSavedSearchId, finalResults);
 
-    dates = capitalResults.map(capitalResults => capitalResults.tranDate);
+    // dates = capitalResults.map(capitalResults => capitalResults.tranDate);
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718
     const goodsCostSavedSearchId = '8718';
-    const cogResults = getCostOfGoods(goodsCostSavedSearchId, dates);
+    //const cogResults = getCostOfGoods(goodsCostSavedSearchId, dates);
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719
     const operatingIncomeSavedSearchId = '8719';
-    const oiResults = getCostOfGoods(operatingIncomeSavedSearchId, dates);
+    //const oiResults = getCostOfGoods(operatingIncomeSavedSearchId, dates);
 
 
     // Create the HTML content with styling
@@ -169,22 +180,26 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
     </tr>`;
 
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
-      const capital = capitalResults[i];
-      const average = averageResults[i];
-      const inventory = inventoryResults[i];
-      const depreciation = depreciationResults[i];
-      const cog = cogResults[i];
-      const oi = oiResults[i];
+      const date = orderedDates[i];
+      const result = finalResults[date];
+
+      const capital = result.capitalTotal;
+      const average = result.capitalAverage;
+      const inventory = result.inventory;
+      const depreciation = result.depreciation;
+      //const cog = cogResults[i];
+      //const oi = oiResults[i];
 
       html += `<tr>
-        <td>${capital.tranDate}</td>
-        <td>${capital.formulaCurrencyTotal.toLocaleString()}¥</td>
-        <td>${parseInt(average).toLocaleString()}¥</td>
-        <td>${inventory.formulaCurrencyTotal.toLocaleString()}¥</td>
-        <td>${depreciation.formulaCurrencyMonth.toLocaleString()}¥</td>
-        <td>${parseInt(cog.currentMonth).toLocaleString()}¥</td>
-        <td>${parseInt(oi.currentMonth).toLocaleString()}¥</td>
+        <td>${date}</td>
+        <td>${capital?.toLocaleString()}¥</td>
+        <td>${parseInt(average)?.toLocaleString()}¥</td>
+        <td>${inventory?.toLocaleString()}¥</td>
+        <td>${depreciation?.toLocaleString()}¥</td>
       </tr>`;
+
+      //<td>${parseInt(cog.currentMonth).toLocaleString()}¥</td>
+      //<td>${parseInt(oi.currentMonth).toLocaleString()}¥</td>
     }
 
     html += '</table>';
