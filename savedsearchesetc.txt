@@ -39,9 +39,9 @@ https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=871
 
 営業キャッシュフロー calc from saved searches 1st 2nd and 営業利益
 
-売上原価(過去12ヵ月合計) / 棚卸資産(12ヵ月平均) calc 売上原価 divided by 棚卸資産 SS
+売上原価(過去12ヵ月合計) / 棚卸資産(12ヵ月平均) calc 売上原価 divided by 棚卸資産 SS (cant bcs lack of data)
 
-売上原価(過去12ヵ月合計) / 棚卸資産(当月残) calc 売上原価 divided by 棚卸資産 SS
+売上原価(過去12ヵ月合計) / 棚卸資産(当月残) calc 売上原価 divided by 棚卸資産 SS (cant bcs lack of data)
 
 
 

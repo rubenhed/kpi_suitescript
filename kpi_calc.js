@@ -127,6 +127,20 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
     });
   }
 
+  const getCashflow = (orderedDates, finalResults) => { //capitalTotal + depreciation + oi
+    for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
+      const date = orderedDates[i];
+      const result = finalResults[date];
+
+      const capital = parseInt(result.capitalTotal) || 0;
+      const depreciation = parseInt(result.depreciation) || 0;
+      const oi = parseInt(result.oi) || 0;
+
+      const cashFlow = capital + depreciation + oi;
+      result.cashFlow = cashFlow;
+    }
+  }
+
   const render = (params) => {
     const portlet = params.portlet;
 
@@ -156,6 +170,8 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
     const operatingIncomeSavedSearchId = '8719';
     getOperatingIncome(operatingIncomeSavedSearchId, finalResults);
 
+    getCashflow(orderedDates, finalResults);
+
 
     // Create the HTML content with styling
     html += `
@@ -183,6 +199,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708" target="_blank">減価償却費</a></th>
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">売上原価</a></th>
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719" target="_blank">営業利益</a></th>
+      <th>営業キャッシュフロー</th>
     </tr>`;
 
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
@@ -195,6 +212,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
       const depreciation = result.depreciation;
       const cog = result.cog;
       const oi = result.oi;
+      const cashFlow = result.cashFlow;
 
       html += `<tr>
         <td>${date}</td>
@@ -204,6 +222,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
         <td>${depreciation?.toLocaleString()}¥</td>
         <td>${parseInt(cog)?.toLocaleString()}¥</td>
         <td>${parseInt(oi)?.toLocaleString()}¥</td>
+        <td>${cashFlow?.toLocaleString()}¥</td>
       </tr>`;
     }
 
