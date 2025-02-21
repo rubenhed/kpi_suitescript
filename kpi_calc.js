@@ -91,36 +91,40 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
     return finalResults;
   };
 
-  const getCostOfGoods = (savedSearchId, dates) => { //売上原価and営業利益 id is 10 and 26
+  const getCostOfGoods = (savedSearchId, finalResults) => { //売上原価and営業利益 id is 10 and 26
     const mySearch = search.load({ id: savedSearchId });
     const resultSet = mySearch.run();
     const range = resultSet.getRange({ start: 0, end: 200 }); //15 items as of 20250220
-    const months = dates.map(date => parseInt(date.split("-")[1], 10));
-
-    const results = [];
-    let c = -1;
-    let found = false
 
     range.forEach((result) => {
-      c++;
-      const recordMonth = result.getValue({ name: 'custrecord_formatc_month' });
-      if (!found && recordMonth != months[c]) {
-        return;
-      }
-      found = true;
-      
-      
-      while (recordMonth != months[c]) {
-        results.push({ currentMonth: 0 });
-        c++;
-      }
+      const tranDate = result.getValue({ name: 'formulatext' }) || 'No Date found';
 
       const currentMonth = result.getValue({ name: 'custrecord_formatc_current_month_actual' }) || 0;
+      
 
-      results.push({ currentMonth });
+      //results.push(tranDate);
+      if (finalResults[tranDate]){
+        finalResults[tranDate].cog = currentMonth;
+      }
     });
+  }
 
-    return results;
+  const getOperatingIncome = (savedSearchId, finalResults) => { //売上原価and営業利益 id is 10 and 26
+    const mySearch = search.load({ id: savedSearchId });
+    const resultSet = mySearch.run();
+    const range = resultSet.getRange({ start: 0, end: 200 }); //15 items as of 20250220
+
+    range.forEach((result) => {
+      const tranDate = result.getValue({ name: 'formulatext' }) || 'No Date found';
+
+      const currentMonth = result.getValue({ name: 'custrecord_formatc_current_month_actual' }) || 0;
+      
+
+      //results.push(tranDate);
+      if (finalResults[tranDate]){
+        finalResults[tranDate].oi = currentMonth;
+      }
+    });
   }
 
   const render = (params) => {
@@ -144,11 +148,13 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718
     const goodsCostSavedSearchId = '8718';
-    //const cogResults = getCostOfGoods(goodsCostSavedSearchId, dates);
+    getCostOfGoods(goodsCostSavedSearchId, finalResults);
+    //portlet.html = test.join(', ');
+    //return;
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719
     const operatingIncomeSavedSearchId = '8719';
-    //const oiResults = getCostOfGoods(operatingIncomeSavedSearchId, dates);
+    getOperatingIncome(operatingIncomeSavedSearchId, finalResults);
 
 
     // Create the HTML content with styling
@@ -176,7 +182,7 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8707" target="_blank">棚卸資産</a></th>
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708" target="_blank">減価償却費</a></th>
       <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">売上原価</a></th>
-      <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">営業利益</a></th>
+      <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719" target="_blank">営業利益</a></th>
     </tr>`;
 
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
@@ -187,8 +193,8 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
       const average = result.capitalAverage;
       const inventory = result.inventory;
       const depreciation = result.depreciation;
-      //const cog = cogResults[i];
-      //const oi = oiResults[i];
+      const cog = result.cog;
+      const oi = result.oi;
 
       html += `<tr>
         <td>${date}</td>
@@ -196,10 +202,9 @@ define(['N/ui/serverWidget', 'N/search'], (serverWidget, search) => {
         <td>${parseInt(average)?.toLocaleString()}¥</td>
         <td>${inventory?.toLocaleString()}¥</td>
         <td>${depreciation?.toLocaleString()}¥</td>
+        <td>${parseInt(cog)?.toLocaleString()}¥</td>
+        <td>${parseInt(oi)?.toLocaleString()}¥</td>
       </tr>`;
-
-      //<td>${parseInt(cog.currentMonth).toLocaleString()}¥</td>
-      //<td>${parseInt(oi.currentMonth).toLocaleString()}¥</td>
     }
 
     html += '</table>';
