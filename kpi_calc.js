@@ -156,8 +156,6 @@ define(['N/search'], (search) => {
 
   const render = (params) => {
     const portlet = params.portlet;
-    portlet.title = 'KPI numbers';
-    let html = "";
 
     // https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705
     const capitalSavedSearchId = '8705';
@@ -230,6 +228,7 @@ define(['N/search'], (search) => {
 
     html += '</table>';
 
+    portlet.title = 'KPI numbers';
     portlet.html = html;
   };
 
