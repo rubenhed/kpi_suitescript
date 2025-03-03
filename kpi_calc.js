@@ -3,7 +3,7 @@
  * @NScriptType Portlet
  */
 
-MONTHS_TO_DISPLAY = 7;
+MONTHS_TO_DISPLAY = 6;
 
 //'N/ui/serverWidget',  serverWidget, 
 define(['N/search'], (search) => {
@@ -104,13 +104,16 @@ define(['N/search'], (search) => {
   const getCashflow = () => { //capitalTotal + depreciation + oi 営業キャッシュフロー
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
       const date = orderedDates[i];
+      const prevDate = orderedDates[i + 1];
       const result = finalResults[date];
+      const prevResult = finalResults[prevDate];
 
       const capital = parseInt(result.capitalTotal) || 0;
+      const prevCapital = parseInt(prevResult.capitalTotal) || 0;
       const depreciation = parseInt(result.depreciation) || 0;
       const oi = parseInt(result.oi) || 0;
 
-      const cashFlow = capital + depreciation + oi;
+      const cashFlow = capital - prevCapital + depreciation + oi;
       result.cashFlow = cashFlow;
     }
   }
@@ -187,13 +190,13 @@ define(['N/search'], (search) => {
     html += `
       <tr>
         <th>日付</th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705" target="_blank">正味運転資本額</a></th>
-        <th>正味運転資本額 (R12) (2 months)</th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8707" target="_blank">棚卸資産</a></th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708" target="_blank">減価償却費</a></th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">売上原価</a></th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719" target="_blank">営業利益</a></th>
-        <th>営業キャッシュフロー</th>
+        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705" target="_blank">正味運転資本額</a>(¥)</th>
+        <th>正味運転資本額 (R12) (2 months)(¥)</th>
+        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8707" target="_blank">棚卸資産</a>(¥)</th>
+        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708" target="_blank">減価償却費</a>(¥)</th>
+        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">売上原価</a>(¥)</th>
+        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719" target="_blank">営業利益</a>(¥)</th>
+        <th>営業キャッシュフロー(¥)</th>
         <th>売上原価(過去12ヵ月合計) / 棚卸資産(12ヵ月平均)</th>
         <th>売上原価(過去12ヵ月合計) / 棚卸資産(当月残)</th>
       </tr>`;
@@ -214,15 +217,15 @@ define(['N/search'], (search) => {
 
       html += `<tr>
         <td>${date}</td>
-        <td>${capital?.toLocaleString()}¥</td>
-        <td>${parseInt(capitalAverage)?.toLocaleString()}¥</td>
-        <td>${inventory?.toLocaleString()}¥</td>
-        <td>${depreciation?.toLocaleString()}¥</td>
-        <td>${parseInt(cog)?.toLocaleString()}¥</td>
-        <td>${parseInt(oi)?.toLocaleString()}¥</td>
-        <td>${cashFlow?.toLocaleString()}¥</td>
-        <td>${inventoryTurnoverAverage?.toLocaleString()}</td>
-        <td>${inventoryTurnoverThisMonth?.toLocaleString()}</td>
+        <td>${capital?.toLocaleString()}</td>
+        <td>${parseInt(capitalAverage)?.toLocaleString()}</td>
+        <td>${inventory?.toLocaleString()}</td>
+        <td>${depreciation?.toLocaleString()}</td>
+        <td>${parseInt(cog)?.toLocaleString()}</td>
+        <td>${parseInt(oi)?.toLocaleString()}</td>
+        <td>${cashFlow?.toLocaleString()}</td>
+        <td>${inventoryTurnoverAverage?.toFixed(2).toLocaleString()}</td>
+        <td>${inventoryTurnoverThisMonth?.toFixed(2).toLocaleString()}</td>
       </tr>`;
     }
 
