@@ -6,11 +6,16 @@
 fix 主要業績評価指標 FOD
 https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8749
 
+
 display event of ones own busho
 https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8741
 
-fix 見積と売上 FOD. put in for shodan status
+
+shoudan status
 https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8742
 
+Sum of Projected Total - this month DONE
+todo: Sum of Projected Total - this year also
 
-change shoudan status when mitsumori is created
+
+todo: change shoudan status when mitsumori is created

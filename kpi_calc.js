@@ -192,14 +192,21 @@ define(['N/search'], (search) => {
         <th>日付</th>
         <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705" target="_blank">正味運転資本額</a>(¥)</th>
         <th>正味運転資本額 (R12) (2 months)(¥)</th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8707" target="_blank">棚卸資産</a>(¥)</th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708" target="_blank">減価償却費</a>(¥)</th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">売上原価</a>(¥)</th>
-        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719" target="_blank">営業利益</a>(¥)</th>
+        
+        
+        
         <th>営業キャッシュフロー(¥)</th>
-        <th>売上原価(過去12ヵ月合計) / 棚卸資産(12ヵ月平均)</th>
-        <th>売上原価(過去12ヵ月合計) / 棚卸資産(当月残)</th>
+        <th>棚卸資産回転率：売上原価(R12)/棚卸資産(Ave12)</th>
+        <th>棚卸資産回転率：売上原価(R12)/棚卸資産(Current)</th>
+        <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8707" target="_blank">棚卸資産</a>(¥)</th>
       </tr>`;
+
+      //<th>売上原価(過去12ヵ月合計) / 棚卸資産(12ヵ月平均)</th>
+      //<th>売上原価(過去12ヵ月合計) / 棚卸資産(当月残)</th>
+
+      //<th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8708" target="_blank">減価償却費</a>(¥)</th>
+      //<th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8718" target="_blank">売上原価</a>(¥)</th>
+      //<th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8719" target="_blank">営業利益</a>(¥)</th>
 
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
       const date = orderedDates[i];
@@ -219,15 +226,19 @@ define(['N/search'], (search) => {
         <td>${date}</td>
         <td>${capital?.toLocaleString()}</td>
         <td>${parseInt(capitalAverage)?.toLocaleString()}</td>
-        <td>${inventory?.toLocaleString()}</td>
-        <td>${depreciation?.toLocaleString()}</td>
-        <td>${parseInt(cog)?.toLocaleString()}</td>
-        <td>${parseInt(oi)?.toLocaleString()}</td>
+        
+        
+        
         <td>${cashFlow?.toLocaleString()}</td>
         <td>${inventoryTurnoverAverage?.toFixed(2).toLocaleString()}</td>
         <td>${inventoryTurnoverThisMonth?.toFixed(2).toLocaleString()}</td>
+        <td>${inventory?.toLocaleString()}</td>
       </tr>`;
     }
+    //<td>${depreciation?.toLocaleString()}</td>
+    //<td>${parseInt(cog)?.toLocaleString()}</td>
+    //<td>${parseInt(oi)?.toLocaleString()}</td>
+    
 
     html += '</table>';
 
