@@ -150,9 +150,8 @@ define(['N/search'], (search) => {
           font-family: MS Gothic, Helvetica, sans-serif;
         }
         #kpi-table th, #kpi-table td {
-          border-top: 1px solid #EFF1F5;
-          border-bottom: 1px solid #EFF1F5;
-          padding: 2px 15px;
+          border-top: 1px  #EFF1F5 solid;
+          padding: 1px 15px;
         }
         #kpi-table th {
           background-color:#EFF1F5;
