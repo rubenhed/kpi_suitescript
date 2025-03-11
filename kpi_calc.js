@@ -145,18 +145,19 @@ define(['N/search'], (search) => {
         #kpi-table {
           width: 100%;
           border-collapse: collapse;
-          text-align: left;
+          text-align: right;
           font-size: 12px;
           font-family: MS Gothic, Helvetica, sans-serif;
         }
         #kpi-table th, #kpi-table td {
           border-top: 1px solid #EFF1F5;
           border-bottom: 1px solid #EFF1F5;
-          padding: 4px;
+          padding: 2px 15px;
         }
         #kpi-table th {
           background-color:#EFF1F5;
           font-weight: 500;
+          padding: 6px 15px;
         }
       </style>`;
   }
