@@ -6,7 +6,7 @@
 主要業績評価指標
 https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8749
 
-差額
+差額 DONE
 
 
 display event of ones own busho
@@ -17,8 +17,8 @@ shoudan status
 https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8742
 
 Sum of Projected Total - this month DONE
-todo: Sum of Projected Total - this year also
-this year kensuu
+todo: Sum of Projected Total - this year also DONE
+this year kensuu DONE
 
 
 todo: change shoudan status when mitsumori is created

@@ -146,13 +146,17 @@ define(['N/search'], (search) => {
           width: 100%;
           border-collapse: collapse;
           text-align: left;
+          font-size: 12px;
+          font-family: MS Gothic, Helvetica, sans-serif;
         }
         #kpi-table th, #kpi-table td {
-          border: 1px solid black;
-          padding: 8px;
+          border-top: 1px solid #EFF1F5;
+          border-bottom: 1px solid #EFF1F5;
+          padding: 4px;
         }
         #kpi-table th {
-          background-color:rgb(242, 242, 242);
+          background-color:#EFF1F5;
+          font-weight: 500;
         }
       </style>`;
   }
@@ -242,7 +246,7 @@ define(['N/search'], (search) => {
 
     html += '</table>';
 
-    portlet.title = 'KPI numbers';
+    portlet.title = 'KPI';
     portlet.html = html;
   };
 
