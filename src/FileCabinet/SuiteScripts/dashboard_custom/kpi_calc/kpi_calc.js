@@ -35,7 +35,7 @@ define(['N/search'], (search) => {
   };
 
   const getCapitalAverage = () => { //正味運転資本額 (R12)
-    const AVERAGE_PERIOD = 2;
+    const AVERAGE_PERIOD = 12;
 
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
       const keys = orderedDates.slice(i, i + AVERAGE_PERIOD);
@@ -195,7 +195,7 @@ define(['N/search'], (search) => {
       <tr>
         <th>日付</th>
         <th><a href="https://6317455.app.netsuite.com/app/common/search/searchresults.nl?searchid=8705" target="_blank">正味運転資本額</a>(¥)</th>
-        <th>正味運転資本額 (R12) (2 months)(¥)</th>
+        <th>正味運転資本額 (R12) (¥)</th>
         
         
         
