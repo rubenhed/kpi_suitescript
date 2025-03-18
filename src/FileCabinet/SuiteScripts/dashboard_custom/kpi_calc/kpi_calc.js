@@ -101,7 +101,7 @@ define(['N/search'], (search) => {
     });
   }
 
-  const getCashflow = () => { //capitalTotal + depreciation + oi 営業キャッシュフロー
+  const getCashflow = () => { //capitalTotal - prevCapitalTotal + depreciation + oi 営業キャッシュフロー
     for (let i = 0; i < MONTHS_TO_DISPLAY; i++) {
       const date = orderedDates[i];
       const prevDate = orderedDates[i + 1];
