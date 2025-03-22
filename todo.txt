@@ -1,0 +1,26 @@
+2025-03-18
+部の商談ステータス / 私の商談ステータス
+ステータスの変更月 - 商談ステータス - 件数今年 - 商談売上今年(proj total) - 件数去年まで - 商談売上去年まで
+
+
+shortcut 営業
+個人別GM(担当者)
+先月(単月)
+今年(Yt)
+
+
+tiles (if possible)
+1 for every watashi no shodan status, link
+
+
+KPI meter (if possible)
+gross margin 当年　and　当年予算
+
+
+2025-03-19
+
+ステータスの変更月 in only SS was too hard. do a user event script to update it
+DONE. ok to do in honban too
+
+todo: change shoudan status when mitsumori is created
+TODO. aftersubmit that changes the status. should only be on create
