@@ -3,7 +3,8 @@
 ステータスの変更月 - 商談ステータス - 件数今年 - 商談売上今年(proj total) - 件数去年まで - 商談売上去年まで
 
 
-shortcut 営業
+shortcuts
+営業
 個人別GM(担当者)
 先月(単月)
 今年(Yt)
@@ -19,8 +20,13 @@ gross margin 当年　and　当年予算
 
 2025-03-19
 
-ステータスの変更月 in only SS was too hard. do a user event script to update it
+ステータス変更日 in only SS was too hard. do a user event script to update it
 DONE. ok to do in honban too
 
 todo: change shoudan status when mitsumori is created
 TODO. aftersubmit that changes the status. should only be on create
+DONE. ok to do in honban too, i Think
+
+2025-03-24
+uploaded scripts in honban too. change update date on status update. change status and update date on estimate create.
+todo tmrw: shortcuts prob, and update dboard for new henkoubi
