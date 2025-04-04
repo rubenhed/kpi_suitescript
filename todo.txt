@@ -3,8 +3,8 @@
 ステータスの変更月 - 商談ステータス - 件数今年 - 商談売上今年(proj total) - 件数去年まで - 商談売上去年まで
 
 
-shortcuts
-営業
+
+shortcuts営業
 個人別GM(担当者)
 先月(単月)
 今年(Yt)
@@ -29,4 +29,17 @@ DONE. ok to do in honban too, i Think
 
 2025-03-24
 uploaded scripts in honban too. change update date on status update. change status and update date on estimate create.
-todo tmrw: shortcuts prob, and update dboard for new henkoubi
+todo tmrw: shortcuts prob, and update dboard for new henkoubi. henkoubi OK. DO shortcuts
+
+
+2025-03-26
+
+
+商談ステータス - 件数今年 - 商談売上今年(proj total) - 件数去年まで - 商談売上去年まで
+
+
+
+kpi meter right side yosan. SET threshold manually every year
+主要業績評価指標 fix date order DONE
+shodan status, sort by opportunity status. Remove 取引実績有 DONE
+show 個人別GM on monday. set to public and available for dashboard DONE
